@@ -51,7 +51,6 @@ function createFallbackResult(title: string, summary: string, status: ScanStatus
 }
 
 export default function Home() {
-  const [domain, setDomain] = useState(process.env.NEXT_PUBLIC_APP_DOMAIN || "your-domain.com");
   const [urlInput, setUrlInput] = useState("");
   const [messageInput, setMessageInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -60,7 +59,7 @@ export default function Home() {
   const [fileResult, setFileResult] = useState<ScanResult | null>(null);
   const [imageResult, setImageResult] = useState<ScanResult | null>(null);
 
-  const prefixedPreview = useMemo(() => buildPrefixedUrl(urlInput, domain), [domain, urlInput]);
+  const prefixedPreview = "https://your-domain.com/scan?target=https://example.com";
 
   const handleUrlScan = async () => {
     const normalized = normalizeUrl(urlInput);
@@ -74,7 +73,7 @@ export default function Home() {
       const response = await fetch("/api/scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode: "url", targetUrl: normalized, domainPrefix: domain }),
+        body: JSON.stringify({ mode: "url", targetUrl: normalized }),
       });
       const data = await response.json();
       setUrlResult(data);
@@ -169,7 +168,7 @@ export default function Home() {
     };
 
     return (
-      <div className={`rounded-2xl border p-6 ${toneStyles[result.status]}`}>
+      <div className={`animate-[fadeInUp_0.4s_ease-out] rounded-2xl border p-6 transition duration-300 hover:-translate-y-0.5 ${toneStyles[result.status]}`}>
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-sm uppercase tracking-[0.25em] opacity-70">{result.source}</p>
@@ -193,7 +192,7 @@ export default function Home() {
   return (
     <SiteShell title="HoaxShield threat scanner" emoji="🛡️" description="Scan websites, messages, files, and images with a modern security-first workflow.">
       <div className="mx-auto flex max-w-7xl flex-col gap-8">
-        <section className="overflow-hidden rounded-[2rem] border border-slate-800 bg-slate-900/80 shadow-2xl shadow-cyan-950/40 backdrop-blur">
+        <section className="overflow-hidden rounded-[2rem] border border-slate-800 bg-slate-900/80 shadow-2xl shadow-cyan-950/40 backdrop-blur transition duration-500 hover:-translate-y-1 hover:shadow-cyan-900/40">
           <div className="grid gap-8 p-8 lg:grid-cols-[1.1fr_0.9fr] lg:p-12">
             <div>
               <span className="inline-flex rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-sm font-medium text-cyan-300">
@@ -207,31 +206,31 @@ export default function Home() {
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+                <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200 transition duration-300 hover:scale-[1.01]">
                   URL scanning with your own domain prefix
                 </div>
-                <div className="rounded-2xl border border-violet-500/20 bg-violet-500/10 px-4 py-3 text-sm text-violet-200">
+                <div className="rounded-2xl border border-violet-500/20 bg-violet-500/10 px-4 py-3 text-sm text-violet-200 transition duration-300 hover:scale-[1.01]">
                   Message and file/image inspection
                 </div>
               </div>
             </div>
 
             <div className="rounded-[1.5rem] border border-slate-800 bg-slate-950/60 p-6">
-              <label className="text-sm font-medium text-slate-300" htmlFor="domain">
-                Your domain prefix
-              </label>
-              <input
-                id="domain"
-                value={domain}
-                onChange={(event) => setDomain(event.target.value)}
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-slate-100 outline-none ring-0"
-                placeholder="your-domain.com"
-              />
-              <p className="mt-3 text-sm leading-6 text-slate-400">
-                When you scan a URL, HoaxShield can build a prefixed inspection link such as https://your-domain.com/scan?target=https://example.com.
-              </p>
-              <div className="mt-5 rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4 text-sm text-cyan-100">
-                Preview: <span className="break-all font-mono text-xs">{prefixedPreview || "https://your-domain.com/scan?target=https://example.com"}</span>
+              <div className="animate-[pulseGlow_2.4s_ease-in-out_infinite] rounded-2xl border border-slate-800 bg-slate-950/60 p-4 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/30">
+                <div className="flex items-center gap-2 text-sm font-semibold text-slate-200">
+                  <span>🚧</span>
+                  <span>Domain prefix preview</span>
+                </div>
+                <div className="mt-3 rounded-2xl border border-dashed border-slate-700 bg-slate-900/70 p-4 text-sm leading-7 text-slate-400 blur-[2px]">
+                  <p>Preview: {prefixedPreview}</p>
+                  <p>This feature is coming soon.</p>
+                </div>
+                <p className="mt-3 text-sm leading-6 text-slate-400">
+                  Once you own a custom domain, this section will support branded scan links and dedicated inspection pages.
+                </p>
+                <a href="/future-preview" className="mt-4 inline-flex items-center rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-medium text-cyan-200 transition duration-300 hover:-translate-y-0.5 hover:bg-cyan-400/20">
+                  Explore what happens in future
+                </a>
               </div>
             </div>
           </div>
@@ -249,7 +248,7 @@ export default function Home() {
                 <button
                   key={tab.id}
                   type="button"
-                  className={`rounded-full px-4 py-2 text-sm font-medium transition ${tab.id === "url" ? "bg-cyan-500 text-slate-950" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}
+                  className={`rounded-full px-4 py-2 text-sm font-medium transition duration-300 hover:-translate-y-0.5 ${tab.id === "url" ? "bg-cyan-500 text-slate-950" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}
                 >
                   {tab.label}
                 </button>
@@ -266,20 +265,20 @@ export default function Home() {
                     id="website-url"
                     value={urlInput}
                     onChange={(event) => setUrlInput(event.target.value)}
-                    className="flex-1 rounded-2xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-slate-100 outline-none"
+                    className="flex-1 rounded-2xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-slate-100 outline-none transition duration-300 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"
                     placeholder="https://example.com"
                   />
                   <button
                     type="button"
                     onClick={handleUrlScan}
-                    className="rounded-2xl bg-cyan-500 px-5 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400"
+                    className="rounded-2xl bg-cyan-500 px-5 py-3 font-semibold text-slate-950 transition duration-300 hover:-translate-y-0.5 hover:bg-cyan-400"
                   >
                     {loading ? "Scanning..." : "Scan URL"}
                   </button>
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+              <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/30">
                 <label className="text-sm font-medium text-slate-300" htmlFor="message">
                   Paste a suspicious message or SMS snippet
                 </label>
@@ -287,14 +286,14 @@ export default function Home() {
                   id="message"
                   value={messageInput}
                   onChange={(event) => setMessageInput(event.target.value)}
-                  className="mt-3 min-h-28 w-full rounded-2xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-slate-100 outline-none"
+                  className="mt-3 min-h-28 w-full rounded-2xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-slate-100 outline-none transition duration-300 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"
                   placeholder="Urgent! Verify your account now..."
                 />
                 <div className="mt-3 flex justify-end">
                   <button
                     type="button"
                     onClick={handleMessageScan}
-                    className="rounded-2xl border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-slate-700"
+                    className="rounded-2xl border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-200 transition duration-300 hover:-translate-y-0.5 hover:bg-slate-700"
                   >
                     Scan message
                   </button>
@@ -302,7 +301,7 @@ export default function Home() {
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
-                <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+                <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/30">
                   <label className="text-sm font-medium text-slate-300" htmlFor="file-upload">
                     Upload a file
                   </label>
@@ -310,7 +309,7 @@ export default function Home() {
                   <p className="mt-3 text-sm leading-6 text-slate-400">Text files and common executable-style names are inspected for malware cues.</p>
                 </div>
 
-                <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+                <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/30">
                   <label className="text-sm font-medium text-slate-300" htmlFor="image-upload">
                     Upload an image
                   </label>
@@ -322,7 +321,7 @@ export default function Home() {
           </div>
 
           <div className="space-y-4">
-            <div className="rounded-[2rem] border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/30 backdrop-blur">
+            <div className="animate-[fadeInUp_0.8s_ease-out] rounded-[2rem] border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/30 backdrop-blur transition duration-300 hover:-translate-y-1">
               <h2 className="text-xl font-semibold text-white">What the scanner looks for</h2>
               <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-400">
                 <li>• Known phishing language such as urgency, prizes, and account verification requests.</li>
@@ -332,7 +331,7 @@ export default function Home() {
               </ul>
             </div>
 
-            <div className="rounded-[2rem] border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/30 backdrop-blur">
+            <div className="rounded-[2rem] border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/30 backdrop-blur transition duration-300 hover:-translate-y-1">
               <h2 className="text-xl font-semibold text-white">Latest results</h2>
               <div className="mt-4 space-y-4">
                 {renderResultCard(urlResult)}
