@@ -216,21 +216,9 @@ export default function Home() {
             </div>
 
             <div className="rounded-[1.5rem] border border-slate-800 bg-slate-950/60 p-6">
-              <div className="animate-[pulseGlow_2.4s_ease-in-out_infinite] rounded-2xl border border-slate-800 bg-slate-950/60 p-4 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/30">
-                <div className="flex items-center gap-2 text-sm font-semibold text-slate-200">
-                  <span>🚧</span>
-                  <span>Domain prefix preview</span>
-                </div>
-                <div className="mt-3 rounded-2xl border border-dashed border-slate-700 bg-slate-900/70 p-4 text-sm leading-7 text-slate-400 blur-[2px]">
-                  <p>Preview: {prefixedPreview}</p>
-                  <p>This feature is coming soon.</p>
-                </div>
-                <p className="mt-3 text-sm leading-6 text-slate-400">
-                  Once you own a custom domain, this section will support branded scan links and dedicated inspection pages.
-                </p>
-                <a href="/future-preview" className="mt-4 inline-flex items-center rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-medium text-cyan-200 transition duration-300 hover:-translate-y-0.5 hover:bg-cyan-400/20">
-                  Explore what happens in future
-                </a>
+              <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-4 text-sm leading-7 text-cyan-100">
+                <p className="font-semibold">Normal scan mode</p>
+                <p className="mt-2 text-cyan-200/90">Paste any URL, message, file, or image and HoaxShield will analyze it immediately.</p>
               </div>
             </div>
           </div>

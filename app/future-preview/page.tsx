@@ -5,7 +5,10 @@ export default function FuturePreviewPage() {
     <SiteShell title="What the future holds" emoji="✨" description="A preview of the branded domain-based scanning experience you can unlock later.">
       <div className="space-y-4">
         <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-6 text-slate-300">
-          <h2 className="text-xl font-semibold text-white">Branded scan pages</h2>
+          <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/70">
+            <img src="/yourimage.png" alt="Future HoaxShield preview" className="h-auto w-full object-cover" />
+          </div>
+          <h2 className="mt-4 text-xl font-semibold text-white">Branded scan pages</h2>
           <p className="mt-3 text-base leading-7 text-slate-400">
             In the future, HoaxShield will let you use your own domain so every scan link looks like a trusted internal tool instead of a generic placeholder.
           </p>
