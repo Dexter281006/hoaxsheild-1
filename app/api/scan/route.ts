@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+const GOOGLE_SAFE_BROWSING_API_KEY = process.env.GOOGLE_SAFE_BROWSING_API_KEY;
+
 type ScanRequest = {
   mode: "url" | "text" | "file" | "image";
   targetUrl?: string;
@@ -57,7 +59,7 @@ export async function POST(request: Request) {
       const domainPrefix = body.domainPrefix?.trim() || "your-domain.com";
       const scanUrl = `https://${domainPrefix}/scan?target=${encodeURIComponent(targetUrl)}`;
 
-      const apiKey = process.env.GOOGLE_SAFE_BROWSING_API_KEY;
+      const apiKey = GOOGLE_SAFE_BROWSING_API_KEY;
       const apiUrl = "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + apiKey;
 
       if (!apiKey) {

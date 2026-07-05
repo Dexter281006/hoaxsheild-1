@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, type ChangeEvent } from "react";
+import SiteShell from "./components/site-shell";
 
 type ScanStatus = "safe" | "warning" | "danger" | "error";
 
@@ -190,7 +191,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.18),_transparent_32%),linear-gradient(120deg,_#020617_0%,_#0f172a_45%,_#111827_100%)] px-4 py-8 text-slate-100 sm:px-6 lg:px-8">
+    <SiteShell title="HoaxShield threat scanner" emoji="🛡️" description="Scan websites, messages, files, and images with a modern security-first workflow.">
       <div className="mx-auto flex max-w-7xl flex-col gap-8">
         <section className="overflow-hidden rounded-[2rem] border border-slate-800 bg-slate-900/80 shadow-2xl shadow-cyan-950/40 backdrop-blur">
           <div className="grid gap-8 p-8 lg:grid-cols-[1.1fr_0.9fr] lg:p-12">
@@ -343,6 +344,6 @@ export default function Home() {
           </div>
         </section>
       </div>
-    </main>
+    </SiteShell>
   );
 }
