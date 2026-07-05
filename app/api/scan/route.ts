@@ -45,6 +45,17 @@ function buildResult(title: string, summary: string, status: "safe" | "warning" 
   return { title, summary, status, details, source, scanUrl: "" };
 }
 
+function parseGoogleFailureMessage(responseText: string) {
+  if (!responseText) return "Google Safe Browsing could not be reached.";
+  if (responseText.includes("API_KEY_SERVICE_BLOCKED") || responseText.includes("PERMISSION_DENIED")) {
+    return "The configured Google API key is blocked or not authorized for Safe Browsing.";
+  }
+  if (responseText.includes("SERVICE_DISABLED")) {
+    return "The Safe Browsing API is not enabled for the configured Google project.";
+  }
+  return responseText;
+}
+
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as ScanRequest;
@@ -59,9 +70,10 @@ export async function POST(request: Request) {
       const apiUrl = "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + apiKey;
 
       if (!apiKey) {
-        return NextResponse.json(buildResult("Google review not available", "Google Safe Browsing is not configured right now, so no live review was returned.", "warning", [
+        return NextResponse.json(buildResult("Google safety check unavailable", "Google Safe Browsing is not configured right now, so no live safety scan could be performed.", "warning", [
           `Scanned URL: ${targetUrl}`,
-          "Google review: Not available",
+          "Google Safe Browsing: unavailable",
+          "Add a valid Google Safe Browsing API key to your environment to enable live scanning.",
         ], "Google Safe Browsing"));
       }
 
@@ -80,9 +92,12 @@ export async function POST(request: Request) {
       });
 
       if (!response.ok) {
-        return NextResponse.json(buildResult("Google review not available", "The Google review request did not return a valid result.", "warning", [
+        const responseText = await response.text();
+        const failureMessage = parseGoogleFailureMessage(responseText);
+        return NextResponse.json(buildResult("Google safety check could not be completed", "The live Google Safe Browsing scan did not complete, so HoaxShield did not produce a false positive review.", "warning", [
           `Scanned URL: ${targetUrl}`,
-          `Google review: Not available`,
+          `Google Safe Browsing: unavailable`,
+          `Reason: ${failureMessage}`,
           `Status: ${response.status}`,
         ], "Google Safe Browsing"));
       }
@@ -99,7 +114,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(buildResult("No obvious threats found", "Google Safe Browsing did not report a known threat for this URL.", "safe", [
         `Scanned URL: ${targetUrl}`,
-        "Google review: No threats found",
+        "Google Safe Browsing: no threats found",
       ], "Google Safe Browsing"));
     }
 
